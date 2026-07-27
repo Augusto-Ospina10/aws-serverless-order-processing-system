@@ -38,38 +38,43 @@ This architecture follows cloud-native best practices by using:
 
 ---
 
-# Architecture
+## Architecture
 
 ![AWS Serverless Architecture](diagrams/aws-serverless-architecture.png.png)
 
 The system uses an asynchronous event-driven architecture where each AWS service performs a specific responsibility.
 
----
+## Request Flow
 
-# Request Flow
-
-```mermaid
-flowchart TD
-
-A[Customer] --> B[Frontend Application]
-
-B --> C[Amazon API Gateway]
-
-C --> D[AWS Lambda<br/>Submit Order]
-
-D --> E[Amazon DynamoDB<br/>Store Order]
-
-D --> F[Amazon SQS<br/>Order Queue]
-
-F --> G[AWS Lambda<br/>Process Order]
-
-G --> H[Amazon DynamoDB<br/>Update Status]
-
-H --> I[AWS Lambda<br/>Send Confirmation]
-
-I --> J[Amazon SES]
-
-J --> K[Customer Email]
+```text
+Customer
+    |
+Frontend Application
+    |
+Amazon API Gateway
+    |
+AWS Lambda (Submit Order)
+    |
+    +----------------+
+    |                |
+DynamoDB        Amazon SQS
+                    |
+                    |
+             AWS Lambda
+             (Process Order)
+                    |
+                    |
+             DynamoDB Update
+                    |
+                    |
+             AWS Lambda
+             (Send Confirmation)
+                    |
+                    |
+              Amazon SES
+                    |
+                    |
+             Customer Email
 ```
 
 ---
