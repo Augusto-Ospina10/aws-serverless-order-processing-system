@@ -1,318 +1,381 @@
 # AWS Serverless Event-Driven Order Processing System
 
-![AWS](https://img.shields.io/badge/AWS-Serverless-orange)
+![AWS](https://img.shields.io/badge/AWS-Cloud-orange)
 ![Lambda](https://img.shields.io/badge/AWS-Lambda-orange)
 ![DynamoDB](https://img.shields.io/badge/AWS-DynamoDB-blue)
-![SQS](https://img.shields.io/badge/AWS-SQS-red)
-![SES](https://img.shields.io/badge/AWS-SES-teal)
-![License](https://img.shields.io/badge/License-MIT-green)
+![SQS](https://img.shields.io/badge/AWS-SQS-purple)
+![SES](https://img.shields.io/badge/AWS-SES-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 A production-style serverless order processing application built entirely on AWS using an event-driven architecture.
 
-This project demonstrates how modern cloud-native applications can leverage managed AWS services to build scalable, highly available, asynchronous, and cost-effective systems without managing servers.
+This project demonstrates how modern cloud-native applications can use managed AWS services to build scalable, highly available, asynchronous, and cost-effective systems without managing traditional servers.
 
 ---
 
 # Project Overview
 
-Customers place orders through a web application hosted on Amazon S3.
+Customers submit orders through a web application hosted on the frontend.
 
-The request flows through Amazon API Gateway into AWS Lambda, where the order is validated, stored inside Amazon DynamoDB, and published to Amazon SQS for asynchronous processing.
+The request is processed through an AWS serverless workflow:
 
-A second Lambda function processes the order, updates its status inside DynamoDB, invokes a third Lambda function, and sends a confirmation email through Amazon SES.
+1. User submits an order through the web interface.
+2. Amazon API Gateway receives the request.
+3. AWS Lambda validates and processes the order.
+4. Order information is stored in Amazon DynamoDB.
+5. Amazon SQS provides asynchronous message processing.
+6. A processing Lambda updates the order status.
+7. Amazon SES sends an email confirmation.
+8. Amazon CloudWatch provides monitoring and logging.
 
-CloudWatch provides monitoring and logging for the entire workflow.
+The architecture follows cloud best practices by using:
+
+- Serverless computing
+- Event-driven processing
+- Managed AWS services
+- Loose coupling between components
+- Scalable architecture design
 
 ---
 
 # Architecture
 
-<p align="center">
-<img src="diagrams/architecture.png" width="100%">
-</p>
+![AWS Serverless Architecture](diagrams/aws-serverless-architecture.png)
 
----
+The system is designed around an asynchronous event-driven workflow.
 
-# Features
+## Request Flow
 
-- Serverless REST API built with Amazon API Gateway
-- Static website hosting using Amazon S3
-- Business logic implemented with AWS Lambda
-- Order persistence using Amazon DynamoDB
-- Asynchronous event-driven processing using Amazon SQS
-- Email notifications using Amazon SES
-- Monitoring and centralized logging with Amazon CloudWatch
-- Fully managed AWS infrastructure
-- Highly scalable architecture
-- Decoupled microservice design
-
----
-
-# Event Flow
-
-```text
+```
 Customer
-
-↓
-
-Amazon S3 Static Website
-
-↓
-
+   |
+   v
+Frontend Application
+   |
+   v
 Amazon API Gateway
-
-↓
-
-SubmitOrder Lambda
-
-↓
-
-Amazon DynamoDB
-
-↓
-
-Amazon SQS
-
-↓
-
-ProcessOrder Lambda
-
-↓
-
-Update DynamoDB
-
-↓
-
-SendConfirmation Lambda
-
-↓
-
-Amazon SES
-
-↓
-
-Customer receives confirmation email
+   |
+   v
+AWS Lambda (Submit Order)
+   |
+   +----------------+
+   |                |
+   v                v
+DynamoDB        Amazon SQS
+                    |
+                    v
+              AWS Lambda
+              (Process Order)
+                    |
+                    v
+              DynamoDB Update
+                    |
+                    v
+              AWS Lambda
+              (Send Confirmation)
+                    |
+                    v
+              Amazon SES
+                    |
+                    v
+              Customer Email
 ```
 
 ---
 
 # AWS Services Used
 
-| AWS Service | Purpose |
-|-------------|---------|
-| Amazon S3 | Static website hosting |
-| Amazon API Gateway | REST API endpoint |
-| AWS Lambda | Serverless business logic |
-| Amazon DynamoDB | NoSQL database |
-| Amazon SQS | Asynchronous message queue |
-| Amazon SES | Email notifications |
-| Amazon CloudWatch | Monitoring, logging and observability |
+## Amazon S3
+
+Used for hosting the frontend static website.
+
+Responsibilities:
+
+- Hosts frontend files
+- Provides scalable static website hosting
+- Integrates with AWS serverless architecture
 
 ---
 
-# Repository Structure
+## Amazon API Gateway
 
-```text
-aws-serverless-order-processing-system
-│
-├── frontend/
-│   ├── index.html
-│   ├── script.js
-│   └── style.css
-│
-├── lambda/
-│   ├── SubmitOrderFunction.py
-│   ├── ProcessOrderFunction.py
-│   └── SendConfirmationFunction.py
-│
-├── diagrams/
-│   └── architecture.png
-│
-├── screenshots/
-│
-├── README.md
-│
-└── LICENSE
-```
+Acts as the REST API entry point.
+
+Responsibilities:
+
+- Receives customer requests
+- Routes requests to Lambda functions
+- Provides secure communication between frontend and backend
 
 ---
 
-# Example Request
+## AWS Lambda
 
-```json
-{
-    "CustomerName": "John Doe",
-    "Email": "john@example.com",
-    "Item": "Gaming Mouse",
-    "Quantity": 1
-}
-```
+Three Lambda functions handle the application workflow:
 
----
+### SubmitOrderFunction
 
-# Example Response
+Responsibilities:
 
-```json
-{
-    "message": "Order submitted successfully.",
-    "orderId": "c3c2e8b8-7a4b-47f5-90ab-d3e8d74c7f3d"
-}
-```
+- Receives order requests
+- Validates input data
+- Stores initial order information
+- Sends messages to SQS
 
----
 
-# Architecture Highlights
+### ProcessOrderFunction
 
-## Event-Driven Design
+Responsibilities:
 
-Orders are processed asynchronously through Amazon SQS, allowing services to remain decoupled and improving scalability and reliability.
+- Processes asynchronous order events
+- Updates order status
+- Triggers confirmation workflow
 
-## Serverless Computing
 
-AWS Lambda automatically scales based on incoming requests without requiring infrastructure management.
+### SendConfirmationFunction
 
-## High Availability
+Responsibilities:
 
-The application leverages managed AWS services that automatically provide high availability and fault tolerance.
-
-## Loose Coupling
-
-Each Lambda function performs a single responsibility, making the application easier to maintain and extend.
+- Generates confirmation email
+- Sends notification through Amazon SES
 
 ---
 
-# Monitoring & Observability
+## Amazon DynamoDB
 
-Amazon CloudWatch provides:
+NoSQL database used for storing order information.
+
+Stored attributes:
+
+- Order ID
+- Customer Name
+- Email
+- Product
+- Quantity
+- Status
+- Created Date
+
+---
+
+## Amazon SQS
+
+Provides asynchronous message processing.
+
+Benefits:
+
+- Decouples application components
+- Improves reliability
+- Handles workload spikes
+
+Queues used:
+
+- OrderQueue
+- OrderDLQ
+
+---
+
+## Amazon SES
+
+Used for sending customer email confirmations.
+
+Workflow:
+
+Lambda → SES → Customer Email
+
+---
+
+## Amazon CloudWatch
+
+Provides monitoring and logging.
+
+Used for:
 
 - Lambda execution logs
-- API Gateway request logs
-- Error monitoring
-- Operational metrics
-- Performance monitoring
-- Centralized logging
+- Application monitoring
+- Troubleshooting
+- Observability
 
 ---
 
-# Scalability
+# Technologies Used
 
-This architecture is designed to scale automatically because:
+## Cloud Platform
 
-- AWS Lambda automatically scales with incoming traffic
-- Amazon API Gateway supports thousands of concurrent requests
-- Amazon SQS decouples application components
-- Amazon DynamoDB provides virtually unlimited scalability
-- Amazon S3 delivers static content globally
+- Amazon Web Services (AWS)
 
----
+## Backend
 
-# Security
-
-The project follows AWS security best practices:
-
-- IAM Roles with least-privilege permissions
-- HTTPS communication through API Gateway
-- Fully managed AWS services
-- Serverless architecture reduces attack surface
-- No servers to patch or maintain
-
----
-
-# Technologies
-
-### AWS
-
-- Amazon S3
-- Amazon API Gateway
+- Python 3.13
 - AWS Lambda
+
+## Database
+
 - Amazon DynamoDB
+
+## Messaging
+
 - Amazon SQS
+
+## Email Service
+
 - Amazon SES
+
+## API
+
+- Amazon API Gateway
+
+## Monitoring
+
 - Amazon CloudWatch
-- AWS IAM
 
-### Frontend
+## Frontend
 
-- HTML5
-- CSS3
-- JavaScript (ES6)
+- HTML
+- CSS
+- JavaScript
+
+---
+
+# Project Features
+
+✅ Fully serverless architecture  
+✅ Event-driven processing workflow  
+✅ Asynchronous order handling  
+✅ No server management required  
+✅ Scalable AWS services  
+✅ Database persistence with DynamoDB  
+✅ Email notifications using SES  
+✅ Monitoring through CloudWatch  
+✅ Dead Letter Queue implementation  
+✅ Production-style cloud architecture  
+
+---
+
+# Screenshots
+
+## Homepage
+
+Customer-facing interface where users submit orders into the AWS serverless workflow.
+
+<img src="screenshots/homepage.png" width="700"/>
+
+---
+
+## Successful Order Submission
+
+The application confirms that the order was accepted and entered the event-driven processing pipeline.
+
+<img src="screenshots/submit-order.png" width="700"/>
+
+---
+
+## AWS Lambda Functions
+
+Three Lambda functions manage order validation, processing, and email notification.
+
+<img src="screenshots/lambda-functions.png" width="700"/>
+
+---
+
+## Amazon DynamoDB Table
+
+Order records are stored with customer information, product details, and processing status.
+
+<img src="screenshots/dynamodb-table.png" width="700"/>
+
+---
+
+## Processed Order Record
+
+Example of a completed order stored inside DynamoDB.
+
+<img src="screenshots/order-record.png" width="700"/>
+
+---
+
+## Amazon SQS Queues
+
+Shows asynchronous message processing using OrderQueue and OrderDLQ.
+
+<img src="screenshots/sqs-queues.png" width="700"/>
+
+---
+
+## Amazon API Gateway
+
+API endpoint responsible for receiving frontend requests.
+
+<img src="screenshots/api-gateway.png" width="700"/>
+
+---
+
+## Amazon CloudWatch Logs
+
+CloudWatch provides monitoring and troubleshooting information from Lambda executions.
+
+<img src="screenshots/cloudwatch-log-groups.png" width="700"/>
+
+---
+
+## Amazon SES Verified Identity
+
+Verified email identity used for sending confirmation messages.
+
+<img src="screenshots/ses-verified-identity.png" width="700"/>
+
+---
+
+## Email Confirmation
+
+Successful customer notification generated through Amazon SES.
+
+<img src="screenshots/email-confirmation.png" width="700"/>
+
+---
+
+# Project Validation
+
+The complete workflow was successfully tested:
+
+✅ Order submitted through frontend  
+✅ API Gateway received request  
+✅ Lambda validated order data  
+✅ DynamoDB stored order information  
+✅ SQS handled asynchronous processing  
+✅ Processing Lambda updated order status  
+✅ SES generated confirmation email  
+✅ Customer received notification  
+✅ CloudWatch captured application logs  
+
+---
+
+# Skills Demonstrated
+
+This project demonstrates practical experience with:
+
+- AWS serverless architecture
+- Cloud infrastructure design
+- Event-driven systems
+- AWS Lambda development
+- DynamoDB database operations
+- API Gateway configuration
+- SQS messaging patterns
+- SES email integration
+- CloudWatch monitoring
+- Troubleshooting AWS services
 
 ---
 
 # Future Improvements
 
-Potential enhancements include:
+Possible enhancements:
 
-- User authentication with Amazon Cognito
-- Infrastructure as Code using AWS CloudFormation or Terraform
-- CI/CD pipeline using GitHub Actions
-- Dead Letter Queue monitoring
-- Amazon EventBridge integration
-- API request validation
-- Custom domain with Route 53
-- CloudFront CDN distribution
-- AWS WAF protection
-- Unit and integration testing
-
----
-
-# Learning Outcomes
-
-This project demonstrates practical experience with:
-
-- Serverless application development
-- Event-driven architecture
-- AWS managed services
-- Cloud-native application design
-- Asynchronous message processing
-- REST API development
-- Cloud monitoring and observability
-- Infrastructure scalability
-- Production-ready cloud architecture
-
----
-
-## Screenshots
-
-### Homepage
-<img src="screenshots/homepage.png" width="800"/>
-
-### Successful Order Submission
-<img src="screenshots/submit-order.png" width="800"/>
-
-### AWS Lambda Functions
-<img src="screenshots/lambda-functions.png" width="800"/>
-
-### Amazon DynamoDB Table
-<img src="screenshots/dynamodb-table.png" width="800"/>
-
-### Processed Order Record
-<img src="screenshots/order-record.png" width="800"/>
-
-### Amazon SQS Queues
-<img src="screenshots/sqs-queues.png" width="800"/>
-
-### Amazon API Gateway
-<img src="screenshots/api-gateway.png" width="800"/>
-
-### Amazon CloudWatch Logs
-<img src="screenshots/cloudwatch-log-groups.png" width="800"/>
-
-### Amazon SES Verified Identity
-<img src="screenshots/ses-verified-identity.png" width="800"/>
-
-### Email Confirmation
-<img src="screenshots/email-confirmation.png" width="800"/>
-
-# Author
-
-**Augusto Ospina**
-
-Cloud Computing Graduate
-
-Aspiring AWS Cloud Engineer
-
-GitHub: https://github.com/Augusto-Ospina10
+- Add authentication using Amazon Cognito
+- Add Infrastructure as Code using AWS CloudFormation or Terraform
+- Add CI/CD deployment pipeline using GitHub Actions
+- Add frontend hosting through Amazon CloudFront
+- Add automated testing
+- Add API security with authentication and authorization
 
 ---
 
