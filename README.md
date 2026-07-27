@@ -40,7 +40,7 @@ This architecture follows cloud-native best practices by using:
 
 ## Architecture
 
-![AWS Serverless Architecture](diagrams/aws-serverless-architecture.png.png)
+![AWS Serverless Architecture](diagrams/architecture.png)
 
 The system uses an asynchronous event-driven architecture where each AWS service performs a specific responsibility.
 
