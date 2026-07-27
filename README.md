@@ -282,7 +282,7 @@ This project demonstrates practical experience with:
 
 ### Successful Order Submission
 
-![Order Success](screenshots/order-success.png)
+![Order Success](screenshots/submit-order.png)
 
 ---
 
@@ -316,22 +316,21 @@ This project demonstrates practical experience with:
 
 ---
 
-### Amazon CloudWatch Logs
+### Amazon CloudWatch Log Groups
 
-![CloudWatch Logs](screenshots/cloudwatch-logs.png)
+![CloudWatch Log Groups](screenshots/cloudwatch-log-groups.png)
 
 ---
 
 ### Amazon SES Verified Identity
 
-![SES Verified](screenshots/ses-verified-identity.png)
+![SES Verified Identity](screenshots/ses-verified-identity.png)
 
 ---
 
 ### Confirmation Email
 
 ![Confirmation Email](screenshots/email-confirmation.png)
-
 ---
 
 # Author
