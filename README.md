@@ -275,63 +275,34 @@ This project demonstrates practical experience with:
 ## Screenshots
 
 ### Homepage
-
-![Homepage](screenshots/homepage.png)
-
----
+<img src="screenshots/homepage.png" width="800"/>
 
 ### Successful Order Submission
-
-![Order Success](screenshots/submit-order.png)
-
----
+<img src="screenshots/submit-order.png" width="800"/>
 
 ### AWS Lambda Functions
-
-![Lambda Functions](screenshots/lambda-functions.png)
-
----
+<img src="screenshots/lambda-functions.png" width="800"/>
 
 ### Amazon DynamoDB Table
-
-![DynamoDB Table](screenshots/dynamodb-table.png)
-
----
+<img src="screenshots/dynamodb-table.png" width="800"/>
 
 ### Processed Order Record
-
-![Order Record](screenshots/order-record.png)
-
----
+<img src="screenshots/order-record.png" width="800"/>
 
 ### Amazon SQS Queues
-
-![SQS Queues](screenshots/sqs-queues.png)
-
----
+<img src="screenshots/sqs-queues.png" width="800"/>
 
 ### Amazon API Gateway
+<img src="screenshots/api-gateway.png" width="800"/>
 
-![API Gateway](screenshots/api-gateway.png)
-
----
-
-### Amazon CloudWatch Log Groups
-
-![CloudWatch Log Groups](screenshots/cloudwatch-log-groups.png)
-
----
+### Amazon CloudWatch Logs
+<img src="screenshots/cloudwatch-log-groups.png" width="800"/>
 
 ### Amazon SES Verified Identity
+<img src="screenshots/ses-verified-identity.png" width="800"/>
 
-![SES Verified Identity](screenshots/ses-verified-identity.png)
-
----
-
-### Confirmation Email
-
-![Confirmation Email](screenshots/email-confirmation.png)
----
+### Email Confirmation
+<img src="screenshots/email-confirmation.png" width="800"/>
 
 # Author
 
