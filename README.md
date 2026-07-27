@@ -272,9 +272,65 @@ This project demonstrates practical experience with:
 
 ---
 
-# Screenshots
+## Screenshots
 
-Application screenshots and AWS console images are available in the **screenshots/** directory.
+### Homepage
+
+![Homepage](screenshots/homepage.png)
+
+---
+
+### Successful Order Submission
+
+![Order Success](screenshots/order-success.png)
+
+---
+
+### AWS Lambda Functions
+
+![Lambda Functions](screenshots/lambda-functions.png)
+
+---
+
+### Amazon DynamoDB Table
+
+![DynamoDB Table](screenshots/dynamodb-table.png)
+
+---
+
+### Processed Order Record
+
+![Order Record](screenshots/order-record.png)
+
+---
+
+### Amazon SQS Queues
+
+![SQS Queues](screenshots/sqs-queues.png)
+
+---
+
+### Amazon API Gateway
+
+![API Gateway](screenshots/api-gateway.png)
+
+---
+
+### Amazon CloudWatch Logs
+
+![CloudWatch Logs](screenshots/cloudwatch-logs.png)
+
+---
+
+### Amazon SES Verified Identity
+
+![SES Verified](screenshots/ses-verified-identity.png)
+
+---
+
+### Confirmation Email
+
+![Confirmation Email](screenshots/email-confirmation.png)
 
 ---
 
